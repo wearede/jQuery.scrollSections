@@ -76,7 +76,8 @@ Modern browsers: Chrome, Firefox, Safari, Opera and IE8+
 
 ## License
 
-Under [MIT license](http://opensource.org/licenses/MIT)
+Under [MIT license](http://opensource.org/licenses/MIT)    
+Copyright(c) 2011-2013 [Stéphane Guigné](http://stephaneguigne.com)
 
 ## Logs
 
