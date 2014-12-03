@@ -6,14 +6,14 @@ A plugin that allows you to define (full page) sections and scroll between them 
  - jQuery mousewheel if you want mousewheel support {@link https://github.com/brandonaaron/jquery-mousewheel}
  - jQuery Special Events scrollstart & scrollstop if you want scrollbar support {@link http://james.padolsey.com/demos/scrollevents/}
 *
-* @version 0.4.3
+* @version 0.4.4
 * @link https://github.com/guins/jquery-scrollsections
 * @author Stéphane Guigné <http://stephaneguigne.com/>
 * @author Richard Fussenegger <http://richard.fussenegger.info/>
 * @license MIT
 * @copyright (c) 2011-2013, Stéphane Guigné
 *
-* Last modification : 2013-08-16
+* Last modification : 2014-12-03
 *
 */
 
@@ -269,22 +269,31 @@ A plugin that allows you to define (full page) sections and scroll between them 
 			var self = this;
 
 			this._$body.bind('touchstart', function (event) {
-				var startEvent = event;
+				var startEvent = event.originalEvent.touches[0];
 
 				event.preventDefault();
-				self._$body.bind('touchmove', function (event) {
-					var diff = { x: startEvent.clientX - event.clientX, y: startEvent.clientY - event.clientY };
+				self._$body.unbind('touchmove.myNameSpace').bind('touchmove.myNameSpace', function (event) {
+					var moveEvent = event.originalEvent.touches[0];
+					var diff = { x: startEvent.clientX - moveEvent.clientX, y: startEvent.clientY - moveEvent.clientY };
 					var nextStep;
 					event.preventDefault();
 					if ((diff.y <= -100 || diff.y >= 100) && Math.abs(diff.y) > Math.abs(diff.x)) {
 						nextStep = diff.y < 0 ? self._currentStep - 1 : self._currentStep + 1;
 						self.customScrollTo(nextStep);
+
+						// Unbind all touchmove.myNameSpace events.
+                		self._$body.unbind('touchmove.myNameSpace');
 					}
 					return false;
 				});
 
 				return false;
 			});
+
+			// Unbind all touchmove.myNameSpace events on touchend.myNameSpace.
+		    self._$body.bind('touchend.myNameSpace', function (event) {
+		        self._$body.unbind('touchmove.myNameSpace');
+		    });
 
 			return this;
 		},
@@ -439,14 +448,35 @@ A plugin that allows you to define (full page) sections and scroll between them 
 				}
 			}
 
+
+
+
+
+			// Fix for inertia skipping sections
+			var prevTime = new Date().getTime();
+
 			this._$window.mousewheel(function (event, delta, deltaX, deltaY) {
+
+
+				
+				// Fix for inertia skipping sections
+		        var curTime = new Date().getTime();
+		        var fireEvent = false;
+		        if (typeof prevTime !== 'undefined') {
+		            var timeDiff = curTime-prevTime;
+		            if (timeDiff > 50) {fireEvent = true;}
+		        }
+		        prevTime = curTime;
+
+
+
 				var stepDiff = null;
 				var nextStep = -1;
 
 				event.preventDefault();
 
 				// Only scroll if we are not animating and scrolling is not paused.
-				if (!(self._isAnimated && self._scrollPaused)) {
+				if (!(self._isAnimated && self._scrollPaused) && fireEvent) {
 
 					deltaY = deltaY>>0; // Because steps numbers are integers
 

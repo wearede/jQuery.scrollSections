@@ -1,4 +1,4 @@
-# jQuery Scroll Sections Plugin (Version 0.4.3)
+# jQuery Scroll Sections Plugin (Version 0.4.4)
 
 A plugin that allows you to define (full page) sections and scroll between them with mousewheel, keyboard, scrollbar and/or touch moves.
 
@@ -84,4 +84,5 @@ Copyright(c) 2011-2013 [Stéphane Guigné](http://stephaneguigne.com)
 
 ## Logs
 
+v0.4.4 - fixed mobile touch issues, fixed osx inertia problem with apple magic mouse and trackpad.
 v0.4.3 - send back arguments to callback functions 
