@@ -80,6 +80,5 @@ Under [MIT license](http://opensource.org/licenses/MIT)
 
 ## Logs
 
-v0.4.4 - fixed mobile touch issues, fixed osx inertia problem with apple magic mouse and trackpad.
-
+v0.4.4 - fixed mobile touch issues, fixed osx inertia problem with apple magic mouse and trackpad.  
 v0.4.3 - send back arguments to callback functions 
